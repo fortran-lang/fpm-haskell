@@ -60,9 +60,8 @@ jobs:
         path: ${{matrix.STACK_CACHE}}
         key: ${{ runner.os }}-${{ steps.time.outputs.time }}${{matrix.STACK_CACHE_VERSION}}
 
-    - name: Build Haskell fpm
+    - name: Build and test Haskell fpm
       run: |
-        cd bootstrap
         stack build
         stack install
         stack test
