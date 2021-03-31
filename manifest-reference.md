@@ -1,5 +1,11 @@
 # Fortran package manager (fpm) manifest reference
 
+> **Important**
+>
+> The authorative manifest reference is available
+> [here](https://github.com/fortran-lang/fpm/blob/master/manifest-reference.md).
+> This document describes the current state of the the Haskell fpm manifest syntax.
+
 The ``fpm.toml`` file for each project is called its *manifest*.
 It is written using the [TOML] format.
 Every manifest file consists of the following sections:
@@ -16,23 +22,6 @@ Every manifest file consists of the following sections:
   Author of the project
 - [*copyright*](#project-copyright):
   Copyright of the project
-- [*description*](#project-description):
-  Description of the project
-- [*categories*](#project-categories):
-  Categories associated with the project
-- [*keywords*](#project-keywords):
-  Keywords describing the project
-- [*homepage*](#project-homepage):
-  The project's homepage
-- Build configuration:
-  - [*auto-tests*](#automatic-target-discovery):
-    Toggle automatic discovery of test executables
-  - [*auto-examples*](#automatic-target-discovery):
-    Toggle automatic discovery of example programs
-  - [*auto-executables*](#automatic-target-discovery):
-    Toggle automatic discovery of executables
-  - [*link*](#link-external-libraries):
-    Link with external dependencies
 - Target sections:
   - [*library*](#library-configuration)
     Configuration of the library target
@@ -45,8 +34,6 @@ Every manifest file consists of the following sections:
     Project library dependencies
   - [*dev-dependencies*](#development-dependencies):
     Dependencies only needed for tests
-- [*install*](#installation-configuration):
-  Installation configuration
 
 
 [TOML]: https://toml.io/
@@ -134,51 +121,6 @@ copyright = "Copyright 2020 Jane Doe"
 ```
 
 
-## Project description
-
-The description provides a short summary on the project.
-It should be plain text and not using any markup formatting.
-
-*Example:*
-
-```toml
-description = "A short summary on this project"
-```
-
-
-## Project categories
-
-The project can be associated with different categories.
-
-*Example:*
-
-```toml
-categories = ["io"]
-```
-
-
-## Project keywords
-
-The keywords field is an array of strings describing the project.
-
-*Example:*
-
-```toml
-keywords = ["hdf5", "mpi"]
-```
-
-
-## Project homepage
-
-URL to the webpage of the project.
-
-*Example:*
-
-```toml
-homepage = "https://stdlib.fortran-lang.org"
-```
-
-
 ## Project targets
 
 Every fpm project can define library, executable and test targets.
@@ -189,37 +131,17 @@ Library targets are exported and useable for other projects.
 
 Defines the exported library target of the project.
 A library is generated if the source directory or include directory is found in a project.
-The default source and include directories are ``src`` and ``include``; these can be modified in the *library* section using the *source-dir* and *include-dir* entries.
-Paths for the source and include directories are given relative to the project root and use ``/`` as path separator on all platforms.
+The default source directory is ``src`` and can be modified in the *library* section using the *source-dir* entry.
+Paths for the source directory are given relative to the project root and use ``/`` as path separator on all platforms.
 
 *Example:*
 
 ```toml
 [library]
 source-dir = "lib"
-include-dir = "inc"
 ```
-
-#### Include directory
-
-> Supported in Fortran fpm only
-
-Projects which use the Fortran `include` statement or C preprocessor `#include` statement, can use the *include-dir* key to specify search directories for the included files.
-*include-dir* can contain one or more directories, where multiple directories are specified using a list of strings.
-Include directories from all project dependencies are passed to the compiler using the appropriate compiler flag.
-
-*Example:*
-
-```toml
-[library]
-include-dir = ["include", "third_party/include"]
-```
-
-> *include-dir* does not currently allow using pre-built module `.mod` files
 
 #### Custom build script
-
-> Supported in Bootstrap fpm only
 
 Projects with custom build scripts can specify those in the *build-script* entry.
 The custom build script will be executed when the library build step is reached.
@@ -251,11 +173,6 @@ The source file containing the program body can be specified in the *main* entry
 Executables can have their own dependencies.
 See [specifying dependencies](#specifying-dependencies) for more details.
 
-Executables can also specify their own external library dependencies.
-See [external libraries](#link-external-libraries) for more details.
-
-> Linking against libraries is supported in Fortran fpm only
-
 *Example:*
 
 ```toml
@@ -266,7 +183,6 @@ main = "program.f90"
 
 [[ executable ]]
 name = "app-tool"
-link = "z"
 [executable.dependencies]
 helloff = { git = "https://gitlab.com/everythingfunctional/helloff.git" }
 ```
@@ -293,11 +209,6 @@ The source file containing the program body can be specified in the *main* entry
 Examples can have their own dependencies.
 See [specifying dependencies](#specifying-dependencies) for more details.
 
-Examples can also specify their own external library dependencies.
-See [external libraries](#link-external-libraries) for more details.
-
-> Linking against libraries is supported in Fortran fpm only
-
 *Example:*
 
 ```toml
@@ -308,7 +219,6 @@ main = "program.f90"
 
 [[ example ]]
 name = "example-tool"
-link = "z"
 [example.dependencies]
 helloff = { git = "https://gitlab.com/everythingfunctional/helloff.git" }
 ```
@@ -327,11 +237,6 @@ The source file containing the program body can be specified in the *main* entry
 Tests can have their own dependencies.
 See [specifying dependencies](#specifying-dependencies) for more details.
 
-Tests can also specify their own external library dependencies.
-See [external libraries](#link-external-libraries) for more details.
-
-> Linking against libraries is supported in Fortran fpm only
-
 *Example:*
 
 ```toml
@@ -342,54 +247,8 @@ main = "tester.F90"
 
 [[ test ]]
 name = "tester"
-link = ["blas", "lapack"]
 [test.dependencies]
 helloff = { git = "https://gitlab.com/everythingfunctional/helloff.git" }
-```
-
-
-## Link external libraries
-
-> Supported in Fortran fpm only
-
-To declare link time dependencies on external libraries a list of native libraries can be specified in the *link* entry.
-Specify either one library as string or a list of strings in case several libraries should be linked.
-When possible the project should only link one native library.
-The list of library dependencies is exported to dependent packages.
-
-*Example:*
-
-To link against the zlib compression library use
-
-```toml
-[build]
-link = "z"
-```
-
-To dependent on LAPACK also BLAS should be linked.
-In this case the order of the libraries matters:
-
-```toml
-[build]
-link = ["blas", "lapack"]
-```
-
-
-## Automatic target discovery
-
-> Supported in Fortran fpm only
-
-Executables and test can be discovered automatically in their default directories.
-The automatic discovery recursively searches the ``app``, ``example``, and ``test`` directories for ``program`` definitions and declares them as executable, example, and test targets, respectively.
-The automatic discovery is enabled by default.
-
-To disable the automatic discovery of targets set the *auto-executables*, *auto-examples*, and *auto-tests* entry to *false*.
-
-```toml
-[build]
-auto-executables = false
-auto-examples = false
-auto-tests = false
 ```
 
 
@@ -453,16 +312,3 @@ rev = "2f5eaba864ff630ba0c3791126a3f811b6e437f3"
 ### Development dependencies
 
 Development dependencies allow to declare *dev-dependencies* in the manifest root, which are available to all tests but not exported with the project.
-
-
-## Installation configuration
-
-In the *install* section components for the installation can be selected.
-By default only executables are installed, library projects can set the *library* boolean to also installatation the module files and the archive.
-
-*Example*
-
-```toml
-[install]
-library = true
-```
