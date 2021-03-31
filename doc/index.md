@@ -1,3 +1,0 @@
----
-title: Packaging and contributing
----

@@ -1,7 +1,0 @@
-name = "link_executable"
-
-[[executable]]
-name = "gomp_test"
-source-dir = "app"
-main = "main.f90"
-link = ["gomp"]

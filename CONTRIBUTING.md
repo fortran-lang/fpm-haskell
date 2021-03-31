@@ -9,7 +9,7 @@ requests.
 
 By contributing to *fpm*, you certify that you own or are allowed to share the
 content of your contribution under the
-[fpm license](https://github.com/fortran-lang/fpm/blob/master/LICENSE).
+[fpm license](LICENSE).
 
 * [Style](#style)
 * [Reporting a bug](#reporting-a-bug)
@@ -33,7 +33,7 @@ Good bug reports are extremely valuable to us—thank you!
 Before opening a bug report:
 
 1. Check if the issue has already been reported
-   ([issues](https://github.com/fortran-lang/fpm/issues)).
+   ([issues](https://github.com/fortran-lang/fpm-haskell/issues)).
 2. Check if it is still an issue or it has been fixed?
    Try to reproduce it with the latest version from the master branch.
 3. Isolate the problem and create a minimal test case.
@@ -64,7 +64,7 @@ It’s quite possible that we are not considering an unusually creative solution
 *fpm* is a community project. There is no one single person making final
 decisions. This is the workflow that we follow:
 
-1. Open a [new issue](https://github.com/fortran-lang/fpm/issues/new) to
+1. Open a [new issue](https://github.com/fortran-lang/fpm-haskell/issues/new) to
    describe a bug or propose a new feature.
    Refer to the earlier sections on how to write a good bug report or feature
    request.
@@ -119,4 +119,4 @@ You can learn how from
 
 Don’t know where to start?
 You can start by looking through the list of
-[open issues](https://github.com/fortran-lang/fpm/issues).
+[open issues](https://github.com/fortran-lang/fpm-haskell/issues).
